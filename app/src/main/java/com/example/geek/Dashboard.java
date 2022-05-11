@@ -84,7 +84,7 @@ public class Dashboard extends DrawerBaseActivity {
     public void btn_scanagain(View view){
         if(mScanning){
             scanLeDevice(false);
-            if(leDeviceListAdapter.getCount()>0){
+            if(leDeviceListAdapter.getCount() > 0){
                 leDeviceListAdapter.clear();
             }
             Intent i = getIntent();
@@ -152,7 +152,6 @@ public class Dashboard extends DrawerBaseActivity {
 
         btn = (Button)findViewById(R.id.btncancel);
         tv = (TextView)findViewById(R.id.scan_info);
-
     }
 
 
