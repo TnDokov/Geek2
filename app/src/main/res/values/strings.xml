@@ -1,0 +1,58 @@
+<resources>
+    //manifest
+    <string name="app_name">Geek</string>
+    <string name="title_activity_side_menu">SideMenu</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    //sidemenu
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_drawer_open">Drawer Open</string>
+    <string name="menu_drawer_close">Drawer Close</string>
+
+    //Login
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+
+    //hyperlink
+    <string name="forgotpass"><a href="https://learntodroid.com">Forgot Password</a></string>
+    <string name="url_faq">http://www.digipas.com/support/faq.php</string>
+
+    //sidemenu
+    <string name="dashboard">DashBoard</string>
+    <string name="faq">FaQ</string>
+    <string name="logout">Logout</string>
+    <string name="mail">2032017.louis@gmail.com</string>
+
+    //dashboard
+    <string name="scan">Scan</string>
+    <string name="scan_for_device">Scanning for Digipas device</string>
+    <string name="start_scan_info">Please click button below to start scanning...</string>
+    <string name="scan_info">Please keep device near and powered on...</string>
+    <string name="cancelscan">Cancel Scan</string>
+    <string name="startscan">Start Scan</string>
+    <string name="smart_cube_name">2-AXIS SMART CUBE LEVEL</string>
+    <string name="smart_cube_model">Model: DWL90Pro</string>
+    <string name="machinist_name">2-AXIS SMART MACHINIST LEVEL</string>
+    <string name="machinist_model">Model: DWL1300XY/DWL1500XY</string>
+    <string name="level_sync_name">2-AXIS PRECISION LEVEL</string>
+    <string name="level_sync_model">Model: DWL3000XY/DWL3500XY/DWL8500XY</string>
+    <string name="level_sync_model_9000">Model: DWL9000XY</string>
+
+
+    //activity_list2
+    <string name="availabeld">Available Devices</string>
+    <string name="nodeviceswasfound">No Devices Was Found</string>
+    <string name="scanning">Scanning</string>
+    <string name="none">None Found</string>
+    <string name="selectdevices">Select a Devices to Connect</string>
+
+
+</resources>
