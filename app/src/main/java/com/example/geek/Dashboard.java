@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -83,6 +85,8 @@ public class Dashboard extends DrawerBaseActivity {
 
     public void btn_scanagain(View view){
         if(mScanning){
+//            System.out.println(mScanning);
+//            System.out.println("ketekan terus");
             scanLeDevice(false);
             if(leDeviceListAdapter.getCount() > 0){
                 leDeviceListAdapter.clear();
@@ -90,7 +94,8 @@ public class Dashboard extends DrawerBaseActivity {
             Intent i = getIntent();
             startActivity(i);
         }else{
-            if(leDeviceListAdapter.getCount()>0){
+//            System.out.println("ketekan bawah");
+            if(leDeviceListAdapter.getCount() > 0){
                 leDeviceListAdapter.clear();
             }
             Intent i = getIntent();
@@ -164,11 +169,13 @@ public class Dashboard extends DrawerBaseActivity {
     protected void onStop() {
         super.onStop();
         if(mScanning){
+//            System.out.println("onstop punya "+mScanning);
             scanLeDevice(false);
             if(leDeviceListAdapter.getCount()>0){
                 leDeviceListAdapter.clear();
             }
         }else{
+//            System.out.println("onstop punya else punya"+mScanning);
             try{
                 if(leDeviceListAdapter.getCount()>0){
                     leDeviceListAdapter.clear();
@@ -195,14 +202,16 @@ public class Dashboard extends DrawerBaseActivity {
 
     private void scanLeDevice(final boolean enable) {
         if(enable){
+//            System.out.println("scanledevicepunya kalau enable"+enable);
             System.out.println("Hey start scanning");
             mBluetoothAdapter.startLeScan(mLeScanCallback);
             btn.setText(getResources().getText(R.string.cancelscan).toString());
             tv.setText(getResources().getText(R.string.scan_info).toString());
             mScanning = true;
         }else{
+//            System.out.println("scanledevicepunya kalau disable"+enable);
             System.out.println("Hey stop scanning");
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
             btn.setText(getResources().getText(R.string.startscan).toString());
             tv.setText(getResources().getText(R.string.start_scan_info).toString());
             mScanning = false;
@@ -212,8 +221,8 @@ public class Dashboard extends DrawerBaseActivity {
 
     final Runnable r = new Runnable() {
         public void run() {
+            System.out.println("runnable punya" + leDeviceListAdapter.getCount());
             try{
-
                 if(leDeviceListAdapter.getCount() > 0)
                 {
                     showDevice();
@@ -224,19 +233,31 @@ public class Dashboard extends DrawerBaseActivity {
             catch(Exception e){ }
         }
     };
+
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
                 @Override
-                public void onLeScan(final BluetoothDevice device, int i, byte[] bytes) {
+                public void onLeScan(final BluetoothDevice device, int i,
+                                     byte[] bytes) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             String devicename = device.getName();
-                            if(devicename == null) devicename = "";
-                            if(devicename.contains("DWL") || devicename.contains("Digi")) {
+                            if(devicename != null){
+                                System.out.println(devicename);
+//                                System.out.println(device);
                                 leDeviceListAdapter.addDevice(device);
                                 leDeviceListAdapter.notifyDataSetChanged();
+                                System.out.println("hasil tambahan adapter    " +leDeviceListAdapter.getCount());
+                            }else{
+                                devicename = "";
                             }
+//                                System.out.println("why");
+                            devicename = "";
+//                            if(devicename.contains("DWL") || devicename.contains("Digi")){
+//                                leDeviceListAdapter.addDevice(device);
+//                                leDeviceListAdapter.notifyDataSetChanged();
+//                            }
                         }
                     });
                 }
@@ -244,6 +265,7 @@ public class Dashboard extends DrawerBaseActivity {
 
 
     private void showDevice() {
+        System.out.println("Show Device beraksi");
         if(leDeviceListAdapter.getCount()>0){
             setContentView(R.layout.activity_device);
 
@@ -255,21 +277,27 @@ public class Dashboard extends DrawerBaseActivity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     String add = leDeviceListAdapter.getDevice(i).getAddress();
                     String name = leDeviceListAdapter.getDevice(i).getName();
+                    SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+
                     if(mScanning){
                         mBluetoothAdapter.stopLeScan(mLeScanCallback);
                         mScanning = false;
                         mHandler_routine.removeCallbacks(r);
                     }
-
-                    if(name == null){
-                        return ;
-                    }else if(name.contains("Digi")){
-                        Toast.makeText(Dashboard.this, "Produk Digi Boss", Toast.LENGTH_SHORT).show();
-                    }else if(name.contains("DWL1300")){
-                        Toast.makeText(Dashboard.this, "Produk DWL1300XY", Toast.LENGTH_SHORT).show();
-                    }else if(name.contains("DWL1500")){
-                        Toast.makeText(Dashboard.this, "Produk DWL1500XY", Toast.LENGTH_SHORT).show();
+                    if(name != null){
+                        editor.putString(add,name);
                     }
+
+//                    if(name == null){
+//                        return ;
+//                    }else if(name.contains("Digi")){
+//                        Toast.makeText(Dashboard.this, "Produk Digi Boss", Toast.LENGTH_SHORT).show();
+//                    }else if(name.contains("DWL1300")){
+//                        Toast.makeText(Dashboard.this, "Produk DWL1300XY", Toast.LENGTH_SHORT).show();
+//                    }else if(name.contains("DWL1500")){
+//                        Toast.makeText(Dashboard.this, "Produk DWL1500XY", Toast.LENGTH_SHORT).show();
+//                    }
 
                 }
             });
@@ -341,25 +369,31 @@ public class Dashboard extends DrawerBaseActivity {
             BluetoothDevice device = mLeDevices.get(i);
             final String deviceName = device.getName();
             if (deviceName != null && deviceName.length() > 0) {
-                String deviceNameFull = String.valueOf(deviceName);
-                String deviceNamePart = deviceNameFull.substring(deviceNameFull.length() - 8, deviceNameFull.length());
 
-                if (deviceName.contains("Digi")) {
-                    holder.deviceName.setText(R.string.smart_cube_name);
-                    holder.deviceModel.setText(R.string.smart_cube_model);
-                } else if (deviceName.contains("DWL1")) {
-                    holder.deviceName.setText(R.string.machinist_name);
-                    holder.deviceModel.setText(R.string.machinist_model);
-                } else if (deviceName.contains("DWL3")) {
-                    holder.deviceName.setText(R.string.level_sync_name);
-                    holder.deviceModel.setText(R.string.level_sync_model);
-                }
+            System.out.println(deviceName);
+            System.out.println("test");
+//                String deviceNameFull = String.valueOf(deviceName);
+//                String deviceNamePart = deviceNameFull.substring(deviceNameFull.length() - 8, deviceNameFull.length());
+//
+//                if (deviceName.contains("Digi")) {
+//                    System.out.println("Ketemu Guys");
+//                    holder.deviceName.setText(R.string.smart_cube_name);
+//                    holder.deviceModel.setText(R.string.smart_cube_model);
+//                } else if (deviceName.contains("DWL1")) {
+//                    holder.deviceName.setText(R.string.machinist_name);
+//                    holder.deviceModel.setText(R.string.machinist_model);
+//                } else if (deviceName.contains("DWL3")) {
+//                    holder.deviceName.setText(R.string.level_sync_name);
+//                    holder.deviceModel.setText(R.string.level_sync_model);
+//                }
             }else {
+                System.out.println("Tidak ketemu sama sekali");
                     holder.deviceName.setText("Unknown Device");
                 }
-                return view;
+            return view;
         }
     }
+
 
     public static class ViewHolder {
         TextView deviceName;
@@ -398,3 +432,4 @@ public class Dashboard extends DrawerBaseActivity {
         super.onBackPressed();
     }
 }
+
